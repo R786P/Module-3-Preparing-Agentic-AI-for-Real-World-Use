@@ -1,4 +1,4 @@
-# 🤖 AAIDC Module 3: Production-Ready Multi-Agent Web App
+# 🤖 AAIDC Module 3: Preparing Agentic AI for Real-World Use
 
 > **A live web application that analyzes GitHub repositories using AI agents — deployed for the world to use!**
 
