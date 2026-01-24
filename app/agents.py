@@ -1,11 +1,11 @@
 from crewai import Agent
-from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 import os
 
-# LLM Setup (Groq - Free)
-llm = ChatGroq(
-    api_key=os.getenv("GROQ_API_KEY"),
-    model="llama-3.1-8b-instant"
+# LLM Setup (OpenAI)
+llm = ChatOpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    model="gpt-4o"
 )
 
 # Tools (Tavily - free web search)
