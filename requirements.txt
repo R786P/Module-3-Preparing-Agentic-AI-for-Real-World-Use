@@ -3,7 +3,7 @@ langchain
 langchain-community
 tavily-python
 groq
-langchain-groq
+langchain-openai
 jinja2
 python-dotenv
 fastapi
