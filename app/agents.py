@@ -1,37 +1,35 @@
-from crewai import Agent
-from langchain_groq import ChatGroq
 import os
-llm = ChatGroq(
-    model="mixtral-8x7b-32768",
-    temperature=0,
-    groq_api_key=os.getenv("GROQ_API_KEY")
-)
-# Tools (Tavily - free web search)
-from crewai_tools import TavilySearchTool
-tavily_tool = TavilySearchTool()
+from langchain_groq import ChatGroq
+from crewai import Agent
 
-# Agents
+groq_api_key = os.getenv("GROQ_API_KEY")
+
+llm = ChatGroq(
+    model="gpt-oss-20b",
+    temperature=0,
+    groq_api_key=groq_api_key
+)
+
 researcher = Agent(
     role="Senior Researcher",
-    goal="Find relevant info about the GitHub project using web search",
-    backstory="Expert in web research with 10+ years of experience",
-    tools=[tavily_tool],
+    goal="Analyze the GitHub repository and extract key insights",
+    backstory="You are an expert in code analysis and software architecture.",
     llm=llm,
     verbose=True
 )
 
 writer = Agent(
-    role="Content Writer",
-    goal="सुझाव हिंदी में दें",
-    backstory="आप हिंदी में स्पष्ट और क्रियाशील सुझाव लिखते हैं",
+    role="Technical Writer",
+    goal="Write a clear and structured report",
+    backstory="You specialize in explaining technical concepts simply.",
     llm=llm,
     verbose=True
 )
 
 reviewer = Agent(
     role="Quality Reviewer",
-    goal="Validate suggestions against facts",
-    backstory="Ensures accuracy and relevance",
+    goal="Ensure accuracy and completeness of the report",
+    backstory="You have 10+ years of experience in software documentation.",
     llm=llm,
     verbose=True
 )
