@@ -1,13 +1,11 @@
-from crewai import Agent
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 import os
 
-# LLM Setup (OpenAI)
-llm = ChatOpenAI(
-    api_key=os.getenv("OPENAI_API_KEY"),
-    model="gpt-4o"
+llm = ChatGroq(
+    model="mixtral-8x7b-32768",
+    temperature=0,
+    groq_api_key=os.getenv("GROQ_API_KEY")
 )
-
 # Tools (Tavily - free web search)
 from crewai_tools import TavilySearchTool
 tavily_tool = TavilySearchTool()
