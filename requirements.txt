@@ -1,11 +1,6 @@
 fastapi
 uvicorn
-langchain
-langchain-core
-langchain-groq
-groq==0.8.0
-httpx==0.27.2
-tavily-python
-python-dotenv
 crewai
-crewai-tools
+langchain-groq
+groq
+tavily-python
