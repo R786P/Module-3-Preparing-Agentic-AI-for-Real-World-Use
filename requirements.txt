@@ -5,3 +5,4 @@ groq
 langchain-groq       
 tavily-python
 python-dotenv
+langchain_community
