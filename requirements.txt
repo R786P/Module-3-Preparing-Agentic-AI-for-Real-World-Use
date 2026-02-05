@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-crewai
-langchain-groq
+fastapi>=0.104.0
+uvicorn>=0.24.0
+crewai>=0.28.0
 groq
 tavily-python
+python-dotenv
