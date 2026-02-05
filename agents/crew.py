@@ -1,7 +1,6 @@
-# agents/crew.py
 from crewai import Agent, Task, Crew, Process
 from langchain_groq import ChatGroq
-from langchain_tavily import TavilySearch  # ← NEW IMPORT
+from langchain_community.tools.tavily_search import TavilySearchResults  # ✅ SAHI IMPORT
 import os
 
 # Initialize LLM
@@ -10,9 +9,12 @@ llm = ChatGroq(
     model="llama3-8b-8192"
 )
 
-# ✅ New Tavily tool (compatible with CrewAI)
-tavily_tool = TavilySearch(
-    api_key=os.getenv("TAVILY_API_KEY")
+# ✅ CORRECT Tavily Tool for CrewAI (LangChain-compatible)
+tavily_tool = TavilySearchResults(
+    api_key=os.getenv("TAVILY_API_KEY"),
+    max_results=3,
+    search_depth="basic",
+    include_answer=True
 )
 
 # Define Agents
@@ -21,7 +23,7 @@ researcher = Agent(
     goal="Find key facts about the GitHub repo using search",
     backstory="Expert in open-source project research",
     llm=llm,
-    tools=[tavily_tool],  # ← Now valid!
+    tools=[tavily_tool],  # ✅ Now valid LangChain tool
     verbose=True
 )
 
@@ -60,6 +62,5 @@ def run_crew(repo_url: str):
     result = crew.kickoff()
     return {
         "status": "✅ Real Analysis Complete",
-        "repo_url": repo_url,
-        "analysis": str(result)
+        "result": str(result)
     }
