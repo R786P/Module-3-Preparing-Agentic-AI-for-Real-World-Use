@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Repo Analyzer - Module 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-4">🔍 Repo Analyzer</h1>
+        <p class="text-gray-600 text-center mb-6">
+            Enter a public GitHub repo URL for AI-powered analysis.
+        </p>
+
+        <form id="analyzeForm">
+            <input
+                type="url"
+                id="repoUrl"
+                placeholder="https://github.com/user/repo"
+                class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+            />
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+                Analyze Repo
+            </button>
+        </form>
+
+        <div id="result" class="mt-6 hidden">
+            <h2 class="font-bold text-lg mb-2">Result:</h2>
+            <pre id="output" class="bg-gray-100 p-3 rounded-lg text-sm whitespace-pre-wrap"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('analyzeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('repoUrl').value;
+            const resultDiv = document.getElementById('result');
+            const output = document.getElementById('output');
+
+            try {
+                const res = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ repo_url: url })
+                });
+
+                const data = await res.json();
+                output.textContent = JSON.stringify(data, null, 2);
+                resultDiv.classList.remove('hidden');
+            } catch (err) {
+                output.textContent = '❌ Error: ' + err.message;
+                resultDiv.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
