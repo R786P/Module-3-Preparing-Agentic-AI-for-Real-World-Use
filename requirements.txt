@@ -4,7 +4,3 @@ crewai
 langchain-groq
 groq
 tavily-python
-streamlit
-langchain==0.1.16
-langgraph==0.0.35
-python-dotenv
