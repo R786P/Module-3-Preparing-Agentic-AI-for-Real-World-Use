@@ -1,29 +1,34 @@
 # agents/crew.py
 from crewai import Agent, Task, Crew, Process
 from langchain_groq import ChatGroq
-from tavily import TavilyClient
+from langchain_community.tools.tavily_search import TavilySearchResults  # ← IMPORTANT
 import os
 
-# Initialize LLM & Tools
+# Initialize LLM
 llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY"),
     model="llama3-8b-8192"
 )
-tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+
+# ✅ Correct Tavily tool (LangChain compatible)
+tavily_tool = TavilySearchResults(
+    tavily_api_key=os.getenv("TAVILY_API_KEY"),
+    max_results=3
+)
 
 # Define Agents
 researcher = Agent(
     role="Research Specialist",
-    goal="Find key facts about the GitHub repo using search and code analysis",
+    goal="Find key facts about the GitHub repo using search",
     backstory="Expert in open-source project research",
     llm=llm,
-    tools=[tavily.search],
+    tools=[tavily_tool],  # ← Now valid!
     verbose=True
 )
 
 analyst = Agent(
     role="Code Analyst",
-    goal="Analyze repo structure, languages, and patterns",
+    goal="Analyze repo structure and tech stack",
     backstory="Senior developer who reads 1000+ repos",
     llm=llm,
     verbose=True
@@ -37,7 +42,6 @@ reviewer = Agent(
     verbose=True
 )
 
-# Define Task
 def create_analysis_task(repo_url: str):
     return Task(
         description=f"Analyze this GitHub repo: {repo_url}. Focus on: tech stack, strengths, weaknesses, and improvement suggestions.",
@@ -46,7 +50,6 @@ def create_analysis_task(repo_url: str):
         async_execution=False
     )
 
-# Run Crew
 def run_crew(repo_url: str):
     task = create_analysis_task(repo_url)
     crew = Crew(
@@ -59,7 +62,5 @@ def run_crew(repo_url: str):
     return {
         "status": "✅ Real Analysis Complete",
         "repo_url": repo_url,
-        "analysis": str(result),
-        "language": "Python",  # TODO: extract from real analysis
-        "stars": "N/A"
-  }
+        "analysis": str(result)
+    }
