@@ -1,7 +1,7 @@
 # agents/crew.py
 from crewai import Agent, Task, Crew, Process
 from langchain_groq import ChatGroq
-from langchain_community.tools.tavily_search import TavilySearchResults  # ← IMPORTANT
+from langchain_tavily import TavilySearch  # ← NEW IMPORT
 import os
 
 # Initialize LLM
@@ -10,10 +10,9 @@ llm = ChatGroq(
     model="llama3-8b-8192"
 )
 
-# ✅ Correct Tavily tool (LangChain compatible)
-tavily_tool = TavilySearchResults(
-    tavily_api_key=os.getenv("TAVILY_API_KEY"),
-    max_results=3
+# ✅ New Tavily tool (compatible with CrewAI)
+tavily_tool = TavilySearch(
+    api_key=os.getenv("TAVILY_API_KEY")
 )
 
 # Define Agents
