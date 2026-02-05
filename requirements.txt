@@ -1,8 +1,8 @@
-fastapi>=0.104.0
+herefastapi>=0.104.0
 uvicorn>=0.24.0
 crewai>=0.28.0
 groq
 langchain-groq       
 tavily-python
 python-dotenv
-langchain_community
+langchain-tavily      
