@@ -1,54 +1,54 @@
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from crewai import Crew
-from app.agents import researcher, writer, reviewer
-from app.tasks import create_tasks
+import os
+import logging
 
-app = FastAPI(title="AI Project Analyzer")
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# CORS middleware for cross-origin requests
+app = FastAPI(title="Repo Analyzer - Module 3")
+
+# Allow CORS (for safety)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-templates = Jinja2Templates(directory="app/templates")
+# Serve static frontend
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+@app.get("/")
+async def serve_frontend():
+    if os.path.exists("static/index.html"):
+        return FileResponse("static/index.html")
+    return {"error": "Frontend not found"}
 
-@app.post("/analyze", response_class=HTMLResponse)
-async def analyze(request: Request, repo_url: str = Form(...)):
-    if not repo_url or not repo_url.strip():
-        return templates.TemplateResponse("index.html", {
-            "request": request,
-            "error": "❌ Error: Please provide a valid GitHub repository URL",
-            "repo_url": ""
-        })
+# Mock analyze endpoint (replace with your CrewAI logic later)
+@app.post("/analyze")
+async def analyze_repo(request: Request):
+    data = await request.json()
+    repo_url = data.get("repo_url", "").strip()
     
-    try:
-        tasks = create_tasks(repo_url.strip())
-        crew = Crew(
-            agents=[researcher, writer, reviewer],
-            tasks=tasks,
-            verbose=True
-        )
-        result = crew.kickoff()
-        return templates.TemplateResponse("index.html", {
-            "request": request,
-            "result": str(result),
-            "repo_url": repo_url
-        })
-    except Exception as e:
-        return templates.TemplateResponse("index.html", {
-            "request": request,
-            "error": f"❌ Error: {str(e)}",
-            "repo_url": repo_url
-        })
+    if not repo_url:
+        return {"error": "Missing 'repo_url'"}
+    
+    # TODO: Replace this with your real CrewAI agent call
+    logger.info(f"Analyzing repo: {repo_url}")
+    
+    return {
+        "status": "✅ Mock Analysis Complete",
+        "repo_url": repo_url,
+        "message": "In real version, CrewAI would analyze this repo.",
+        "note": "Replace this response with actual agent output."
+    }
 
+# Health check
+@app.get("/health")
+def health():
+    return {"status": "ok"}
