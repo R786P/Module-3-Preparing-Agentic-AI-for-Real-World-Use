@@ -3,10 +3,10 @@ from crewai import Agent, Task, Crew, Process
 from langchain_groq import ChatGroq
 import os
 
-# Initialize LLM
 llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY"),
-    model="llama-3-8b-8192"
+    model_name="llama3-8b-8192",  # some versions use `model_name`
+    temperature=0.3
 )
 
 # Define Agents (BINA KOI TOOL KE)
