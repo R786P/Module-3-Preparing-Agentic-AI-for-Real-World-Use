@@ -5,7 +5,7 @@ import os
 
 llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY"),
-    model_name="llama3-8b-8192",  # some versions use `model_name`
+    model_name="llama-3.1-8b-instat",  # some versions use `model_name`
     temperature=0.3
 )
 
